@@ -17,12 +17,13 @@ public class Cliente {
 	private DataOutputStream salida;
 	private int sala;
 	
-	public Cliente(int puerto, String ip) throws UnknownHostException, IOException {
+	public Cliente(int puerto, String ip, int sala) throws UnknownHostException, IOException {
 		this.ip = ip;
 		this.puerto = puerto;
 		this.socket = new Socket(this.ip, this.puerto);
 		this.entrada = new DataInputStream(socket.getInputStream());
 		this.salida = new DataOutputStream(socket.getOutputStream());
+		this.sala = sala;
 	}
 	
 	public void ejecutar() throws IOException {
