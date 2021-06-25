@@ -15,6 +15,7 @@ public class Cliente {
 	private Socket socket;
 	private DataInputStream entrada;
 	private DataOutputStream salida;
+	private int sala;
 	
 	public Cliente(int puerto, String ip) throws UnknownHostException, IOException {
 		this.ip = ip;
@@ -36,6 +37,7 @@ public class Cliente {
 	
 	public void enviarMensaje(String mensaje) {
 		try {
+			salida.write(sala);
 			salida.writeUTF(mensaje);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -43,7 +45,8 @@ public class Cliente {
 		}
 	}
 	
-	public void inicializarHiloCliente(JChatCliente ventana) {
+	public void inicializarHiloCliente(JChatCliente ventana) throws IOException {
+		salida.write(sala);
 		new HiloCliente(this.entrada, ventana).start();
 	}
 	

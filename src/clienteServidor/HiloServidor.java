@@ -20,13 +20,15 @@ public class HiloServidor extends Thread {
 		DataInputStream entrada;
 		DataOutputStream salida;
 		String mensaje;
+		int sala = 0;
 
 		try {
 			entrada = new DataInputStream(this.socket.getInputStream());
 
 			while (true) {
+				sala = entrada.read();
 				mensaje = entrada.readUTF();
-				System.out.println(mensaje);
+				System.out.println("Sala: " + sala + " | " + mensaje);
 
 				for (Socket envio : sockets) {
 					salida = new DataOutputStream(envio.getOutputStream());

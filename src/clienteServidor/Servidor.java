@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Servidor {
 	
 	private int puerto;
 	private ServerSocket server;
+	private ArrayList<Socket>[] salas;
 	private ArrayList<Socket> sockets;
 	
 	public Servidor(int puerto) throws IOException {
@@ -18,6 +21,9 @@ public class Servidor {
 		this.server = new ServerSocket(this.puerto);
 		this.sockets = new ArrayList<Socket>();
 		
+		// Sala 1 y 2
+		this.salas[0] = new ArrayList<Socket>();
+		this.salas[1] = new ArrayList<Socket>();
 	}
 	
 	public void ejecutar() throws IOException {
@@ -42,14 +48,19 @@ public class Servidor {
 	
 	public void ejecutarChat() throws IOException {
 		Socket socket;
+		DataInputStream entrada;
+		int sala;
 		
 		while (true) {
 //			System.out.println("Esperando conexion..");
 			socket = server.accept();
-			System.out.println("Conexion establecida!!!");
+			entrada = new DataInputStream(socket.getInputStream());
+			sala = entrada.read();
+			System.out.println("Conexion establecida!!!" + " en sala: " + sala);
 			
 			this.sockets.add(socket);
-			new HiloServidor(socket, sockets).start();
+			this.salas[sala].add(socket);
+			new HiloServidor(socket, salas[sala]).start();
 		}
 	}
 	
