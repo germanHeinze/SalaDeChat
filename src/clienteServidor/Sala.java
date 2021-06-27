@@ -1,47 +1,54 @@
 package clienteServidor;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Sala {
 
-	private Servidor servidor;
-	private static int PUERTO = 50000;
-	private int puertoSala;
+	private static int Id = 0;
+	private int idSala;
+//	private List<Socket> sockets;
 	private String nombre;
-	private List<String> usuarios;
+	private HashMap<String, Socket> usuarios;
+	private List<String> mensajes;
 
 	public Sala(String nombre) throws IOException {
-		this.puertoSala = PUERTO;
-		PUERTO++;
-		servidor = new Servidor(puertoSala);
+		this.idSala = Id;
+		Id++;
 		this.nombre = nombre;
-		this.usuarios = new LinkedList<String>();
+		this.usuarios = new HashMap<String, Socket>();
 	}
 
 	public String getNombre() {
 		return nombre;
 	}
 
-	public int getPuerto() {
-		return this.puertoSala;
+	public int getIdSala() {
+		return idSala;
+	}
+
+	public void sacarUsuario(String nombreUsuario) {
+		this.usuarios.remove(nombreUsuario);
 	}
 
 	public int cantUsuarios() {
-		return this.servidor.cantSockets();
+		return this.usuarios.size();
 	}
 
-	public void ejecutarChat() throws IOException {
-		this.servidor.ejecutarChat();
+	public void addUsuario(String nombreUsuario, Socket socket) {
+		this.usuarios.put(nombreUsuario, socket);
 	}
 
-	public void addUsuario(String usuario) {
-		this.usuarios.add(usuario);
+	public HashMap<String, Socket> getUsuarios() {
+		return usuarios;
 	}
 	
-	public List<String> getUsuarios() {
-		return this.usuarios;
+	public ArrayList<Socket> getSockets() {
+		ArrayList<Socket> list = new ArrayList<Socket>(usuarios.values());
+		return list;
 	}
 
 	@Override

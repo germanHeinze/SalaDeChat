@@ -145,7 +145,7 @@ public class JChatCliente extends JFrame {
 	}
 
 	public void asignarCliente(Cliente cliente, String usuario) throws UnknownHostException, IOException {
-		this.cliente = new Cliente(this.sala.getPuerto(), "localhost");
+		this.cliente = new Cliente(this.sala.getPuerto(), "localhost", 0);
 		this.cliente.inicializarHiloCliente(ventana);
 		this.usuario = usuario;
 	}

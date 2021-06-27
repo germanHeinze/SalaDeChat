@@ -26,16 +26,6 @@ public class Cliente {
 		this.sala = sala;
 	}
 	
-	public void ejecutar() throws IOException {
-		
-		System.out.println(entrada.readUTF());
-		salida.writeUTF("Primer server!!");
-		
-		entrada.close();
-		salida.close();
-		this.socket.close();
-	}
-	
 	public void enviarMensaje(String mensaje) {
 		try {
 			salida.write(sala);
