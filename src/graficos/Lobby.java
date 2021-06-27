@@ -9,7 +9,6 @@ import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
 import clienteServidor.Cliente;
-import clienteServidor.HiloSalas;
 import clienteServidor.Sala;
 
 import javax.swing.DefaultListModel;
@@ -29,7 +28,8 @@ public class Lobby {
 	JButton btnConectar;
 	private List<Cliente> clientes = new LinkedList<Cliente>();
 	private Cliente cliente;
-	private String usuario;
+	private String nombreUsuario;
+	private int puerto = 50000;
 
 	/**
 	 * Launch the application.
@@ -63,25 +63,25 @@ public class Lobby {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		try {
-			Sala sala1 = new Sala("Sala 1");
-			Sala sala2 = new Sala("Sala 2");
-
-			this.salas.add(sala1);
-			this.salas.add(sala2);
-
-			new HiloSalas(this.salas.get(0)).start();
-			new HiloSalas(this.salas.get(1)).start();
-
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+//		try {
+//			Sala sala1 = new Sala("Sala 1");
+//			Sala sala2 = new Sala("Sala 2");
+//
+//			this.salas.add(sala1);
+//			this.salas.add(sala2);
+//
+//			new HiloSalas(this.salas.get(0)).start();
+//			new HiloSalas(this.salas.get(1)).start();
+//
+//		} catch (IOException e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}
 
 		JList list = new JList();
 		DefaultListModel modelo = new DefaultListModel();
-		modelo.addElement(this.salas.get(0));
-		modelo.addElement(this.salas.get(1));
+//		modelo.addElement(this.salas.get(0));
+//		modelo.addElement(this.salas.get(1));
 		list.setModel(modelo);
 
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -90,25 +90,25 @@ public class Lobby {
 
 		JButton btnCrearSala = new JButton("Crear Sala");
 		btnCrearSala.setEnabled(false);
-		btnCrearSala.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String nombreSala = JOptionPane.showInputDialog("Ingrese nombre de la sala: ");
-				JOptionPane.showMessageDialog(null, "Sala " + nombreSala + " creada exitosamente");
-
-				try {
-					Sala sala = new Sala(nombreSala);
-					salas.add(sala);
-					modelo.addElement(sala);
-					list.setModel(modelo);
-
-					new HiloSalas(sala).start();
-
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
+//		btnCrearSala.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				String nombreSala = JOptionPane.showInputDialog("Ingrese nombre de la sala: ");
+//				JOptionPane.showMessageDialog(null, "Sala " + nombreSala + " creada exitosamente");
+//
+//				try {
+//					Sala sala = new Sala(nombreSala);
+//					salas.add(sala);
+//					modelo.addElement(sala);
+//					list.setModel(modelo);
+//
+//					new HiloSalas(sala).start();
+//
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		});
 		btnCrearSala.setBounds(298, 82, 109, 21);
 		frame.getContentPane().add(btnCrearSala);
 
@@ -118,25 +118,25 @@ public class Lobby {
 			public void actionPerformed(ActionEvent e) {
 				int select = list.getSelectedIndex();
 				if (select != -1) {
-					Sala sala = salas.get(select);
-					sala.addUsuario(usuario);
+//					Sala sala = salas.get(select);
+//					sala.addUsuario(nombreUsuario);
+					
 
 					JChatCliente frame = new JChatCliente();
-					frame.setTitle(sala.getNombre() + " | " + usuario);
+//					frame.setTitle(sala.getNombre() + " | " + nombreUsuario);
 					frame.setVisible(true);
-					frame.assignarSala(sala);
+//					frame.assignarSala(sala);
 					
 					try {
-						frame.asignarCliente(cliente, usuario);
-					} catch (UnknownHostException e1) {
+						cliente = new Cliente(puerto , "localhost", 0);
+						cliente.inicializarHiloCliente(frame);
+					} catch (IOException e2) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						e2.printStackTrace();
 					}
+					
 
-					list.setModel(modelo);
+//					list.setModel(modelo);
 					
 					textField.setEnabled(true);
 					btnUnirseASala.setEnabled(false);
@@ -158,14 +158,14 @@ public class Lobby {
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
-		btnConectar = new JButton("Conectar");
+		btnConectar = new JButton("Crear");
 		btnConectar.setBounds(161, 32, 109, 21);
 		frame.getContentPane().add(btnConectar);
 		
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				usuario = textField.getText();
+				nombreUsuario = textField.getText();
 
 				textField.setEnabled(false);
 				btnUnirseASala.setEnabled(true);

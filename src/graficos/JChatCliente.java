@@ -38,6 +38,7 @@ public class JChatCliente extends JFrame {
 	private JTextField textField;
 	private Sala sala;
 	private JList list;
+	private int puerto = 50000;
 
 	/**
 	 * Launch the application.
@@ -113,7 +114,7 @@ public class JChatCliente extends JFrame {
 				textField.setText(null);
 				textField.requestFocus();
 				
-				ventana.actualizarList();
+//				ventana.actualizarList();
 				
 			}
 		});
@@ -131,23 +132,21 @@ public class JChatCliente extends JFrame {
 	public void assignarSala(Sala sala) {
 		this.sala = sala;
 		
-		actualizarList();
+//		actualizarList();
 	}
 
-	public void actualizarList() {
-		// Asigna lista de usuarios a la list
-		DefaultListModel modelo = new DefaultListModel();
-		for (String usuario : this.sala.getUsuarios()) {
-			modelo.addElement(usuario);	
-		}
-		
-		list.setModel(modelo);
-	}
+//	public void actualizarList() {
+//		// Asigna lista de usuarios a la list
+//		DefaultListModel modelo = new DefaultListModel();
+//		for (String usuario : this.sala.getUsuarios()) {
+//			modelo.addElement(usuario);	
+//		}
+//		
+//		list.setModel(modelo);
+//	}
 
-	public void asignarCliente(Cliente cliente, String usuario) throws UnknownHostException, IOException {
-		this.cliente = new Cliente(this.sala.getPuerto(), "localhost", 0);
-		this.cliente.inicializarHiloCliente(ventana);
-		this.usuario = usuario;
+	public void asignarCliente(Cliente cliente) throws UnknownHostException, IOException {
+		this.cliente = cliente;
 	}
 	
 }

@@ -16,15 +16,26 @@ public class HiloCliente extends Thread {
 	}
 
 	public void run() {
-		String mensaje;
+		PaqueteDatos datos = new PaqueteDatos();
+		byte[] buffer = new byte[250000];
 
 		while (true) {
 			try {
-				mensaje = entrada.readUTF();
-				ventana.escribirMensaje(mensaje);
+				// Datos de entrada
+				entrada.read(buffer);
+				datos = datos.deserialize(buffer);
+				
+				// Escribe el frame
+				ventana.escribirMensaje(datos.getMensaje());
+				
+				System.out.println(datos);
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 //				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

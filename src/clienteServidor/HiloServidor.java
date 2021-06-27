@@ -19,20 +19,28 @@ public class HiloServidor extends Thread {
 	public void run() {
 		DataInputStream entrada;
 		DataOutputStream salida;
-		String mensaje;
-		int sala = 0;
+		PaqueteDatos datos = new PaqueteDatos();
+		byte[] buffer = new byte[250000];
 
 		try {
 			entrada = new DataInputStream(this.socket.getInputStream());
 
 			while (true) {
-				sala = entrada.read();
-				mensaje = entrada.readUTF();
-				System.out.println("Sala: " + sala + " | " + mensaje);
+				// El cliente me dice en que sala esta y su usuario
+				entrada.read(buffer);
+				try {
+					datos = datos.deserialize(buffer);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				System.out.println(datos);
+				System.out.println("Sala: " +  datos.getSala() + " | " + datos.getNombreUsuario() + ": " + datos.getMensaje());
 
 				for (Socket envio : sockets) {
 					salida = new DataOutputStream(envio.getOutputStream());
-					salida.writeUTF(mensaje);
+					salida.write(datos.serialize(datos));
 				}
 			}
 
