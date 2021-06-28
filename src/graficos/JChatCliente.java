@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JOptionPane;
 
 import clienteServidor.Cliente;
+import clienteServidor.PaqueteDatos;
 import clienteServidor.Sala;
 
 import javax.swing.JTextArea;
@@ -30,7 +31,7 @@ public class JChatCliente extends JFrame {
 	 */
 	private static final long serialVersionUID = 4346394367563281130L;
 	private JPanel contentPane;
-	private String usuario;
+	private String nombreUsuario;
 	private JTextArea textArea_1;
 	Cliente cliente;
 	JChatCliente ventana = this;
@@ -105,10 +106,7 @@ public class JChatCliente extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Adquiere el mensaje y lo manda al servidor formateado
 				String msj = textField.getText();
-				
-				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-				String fecha = dtf.format(LocalDateTime.now());
-				cliente.enviarMensaje("[" + fecha + "] " + usuario + ": " + msj);
+				cliente.enviarMensaje(msj);
 				
 				// borra y adquire foco
 				textField.setText(null);
@@ -125,7 +123,10 @@ public class JChatCliente extends JFrame {
 
 	}
 
-	public void escribirMensaje(String mensaje) {
+	public void escribirMensaje(String msj) {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		String fecha = dtf.format(LocalDateTime.now());
+		String mensaje = ("[" + fecha + "] " + this.nombreUsuario + ": " + msj);
 		textArea_1.append(mensaje + "\n");
 	}
 	

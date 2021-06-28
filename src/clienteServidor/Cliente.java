@@ -53,6 +53,7 @@ public class Cliente {
 		Cliente cliente = new Cliente(50000, "localhost", 0, "ger1234");
 		JChatCliente frame = new JChatCliente();
 		frame.setVisible(true);
+		frame.setTitle("ger1234");
 		frame.asignarCliente(cliente);
 		cliente.inicializarHiloCliente(frame);
 		
@@ -60,6 +61,7 @@ public class Cliente {
 		Cliente cliente2 = new Cliente(50000, "localhost", 0, "Veiny24");
 		JChatCliente frame2 = new JChatCliente();
 		frame2.setVisible(true);
+		frame2.setTitle("Veiny24");
 		frame2.asignarCliente(cliente2);
 		cliente2.inicializarHiloCliente(frame2);
 		

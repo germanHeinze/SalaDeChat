@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PaqueteDatos implements Serializable {
 
@@ -17,16 +19,19 @@ public class PaqueteDatos implements Serializable {
 	private String nombreUsuario;
 	private String mensaje;
 	private int cantSalas;
+	private String fecha;
 
 	public PaqueteDatos(int sala, String nombreUsuario, String mensaje, int cantSalas) {
 		this.sala = sala;
 		this.nombreUsuario = nombreUsuario;
-		this.mensaje = mensaje;
 		this.cantSalas = cantSalas;
+		this.mensaje = mensaje;
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		this.fecha = dtf.format(LocalDateTime.now());
 	}
 
 	public PaqueteDatos() {
-
 	}
 
 	public byte[] serialize(PaqueteDatos datos) throws IOException {
@@ -41,7 +46,7 @@ public class PaqueteDatos implements Serializable {
 		ObjectInputStream is = new ObjectInputStream(in);
 		return (PaqueteDatos) is.readObject();
 	}
-	
+
 	// Setters
 	public void setSala(int sala) {
 		this.sala = sala;
@@ -76,9 +81,13 @@ public class PaqueteDatos implements Serializable {
 		return cantSalas;
 	}
 	
+	public String getFecha() {
+		return fecha;
+	}
+
 	@Override
 	public String toString() {
-		return "Sala: " + this.sala + " | Usuario: " + this.nombreUsuario + " | mensaje: " + this.mensaje;
+		return ("[" + this.fecha + "] " + this.nombreUsuario + ": " + this.mensaje);
 	}
 
 }
