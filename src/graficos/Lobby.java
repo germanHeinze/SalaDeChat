@@ -16,16 +16,19 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class Lobby {
 
-	private List<Sala> salas = new LinkedList<Sala>();
+	private List<Sala> nombreSalas = new LinkedList<Sala>();
+	private HashMap<Integer, Sala> salas = new HashMap<Integer, Sala>();
 	private JFrame frame;
 	private JTextField textField;
 	JButton btnConectar;
+	DefaultListModel modelo;
 	private List<Cliente> clientes = new LinkedList<Cliente>();
 	private Cliente cliente;
 	private String nombreUsuario;
@@ -79,7 +82,7 @@ public class Lobby {
 //		}
 
 		JList list = new JList();
-		DefaultListModel modelo = new DefaultListModel();
+		modelo = new DefaultListModel();
 //		modelo.addElement(this.salas.get(0));
 //		modelo.addElement(this.salas.get(1));
 		list.setModel(modelo);
@@ -116,28 +119,26 @@ public class Lobby {
 		btnUnirseASala.setEnabled(false);
 		btnUnirseASala.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				int select = list.getSelectedIndex();
 				if (select != -1) {
-//					Sala sala = salas.get(select);
-//					sala.addUsuario(nombreUsuario);
-					
+					Sala sala = salas.get(select);
+					sala.addUsuario(nombreUsuario, cliente.getSocket());
 
-					JChatCliente frame = new JChatCliente();
-//					frame.setTitle(sala.getNombre() + " | " + nombreUsuario);
-					frame.setVisible(true);
-//					frame.assignarSala(sala);
-					
 					try {
-						cliente = new Cliente(puerto , "localhost", 0);
+						JChatCliente frame = new JChatCliente();
+						cliente.enviarMensaje("", select, 0, false, true);
 						cliente.inicializarHiloCliente(frame);
-					} catch (IOException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
-					
+						frame.asignarCliente(cliente, nombreUsuario);
+						frame.assignarSala(sala);
+						frame.setVisible(true);
 
-//					list.setModel(modelo);
-					
+					} catch (IOException | ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+					list.setModel(modelo);
 					textField.setEnabled(true);
 					btnUnirseASala.setEnabled(false);
 					btnCrearSala.setEnabled(false);
@@ -158,14 +159,37 @@ public class Lobby {
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
-		btnConectar = new JButton("Crear");
+		btnConectar = new JButton("Conectar");
 		btnConectar.setBounds(161, 32, 109, 21);
 		frame.getContentPane().add(btnConectar);
-		
+
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				nombreUsuario = textField.getText();
+
+				try {
+					cliente = new Cliente(50000, "localhost", 0, nombreUsuario);
+					cliente.enviarMensaje("", -1, 0, false, true); // mensaje vacio al server
+					salas = cliente.getSalas();
+					nombreSalas = new LinkedList<Sala>(salas.values());
+
+					for (Sala sala : nombreSalas) {
+						modelo.addElement(sala);
+					}
+
+					list.setModel(modelo);
+
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				textField.setEnabled(false);
 				btnUnirseASala.setEnabled(true);

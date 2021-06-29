@@ -8,6 +8,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PaqueteDatos implements Serializable {
 
@@ -20,12 +23,18 @@ public class PaqueteDatos implements Serializable {
 	private String mensaje;
 	private int cantSalas;
 	private String fecha;
+	private boolean crearSala;
+	private String nombreSala;
+	private HashMap<Integer, Sala> salas = new HashMap<Integer, Sala>();
+	private boolean dataServer;
 
-	public PaqueteDatos(int sala, String nombreUsuario, String mensaje, int cantSalas) {
+	public PaqueteDatos(int sala, String nombreUsuario, String mensaje, int cantSalas, boolean crearSala, boolean dataServer) {
 		this.sala = sala;
 		this.nombreUsuario = nombreUsuario;
 		this.cantSalas = cantSalas;
 		this.mensaje = mensaje;
+		this.crearSala = crearSala;
+		this.dataServer = dataServer;
 		
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		this.fecha = dtf.format(LocalDateTime.now());
@@ -47,6 +56,11 @@ public class PaqueteDatos implements Serializable {
 		return (PaqueteDatos) is.readObject();
 	}
 
+	@Override
+	public String toString() {
+		return ("[" + this.fecha + "] " + this.nombreUsuario + ": " + this.mensaje);
+	}
+	
 	// Setters
 	public void setSala(int sala) {
 		this.sala = sala;
@@ -62,6 +76,14 @@ public class PaqueteDatos implements Serializable {
 
 	public void setCantSalas(int cantSalas) {
 		this.cantSalas = cantSalas;
+	}
+	
+	public void setSalas(HashMap<Integer, Sala> salas) {
+		this.salas = salas;
+	}
+	
+	public void setDataServer() {
+		this.dataServer = true;
 	}
 
 	// Getters
@@ -85,9 +107,14 @@ public class PaqueteDatos implements Serializable {
 		return fecha;
 	}
 
-	@Override
-	public String toString() {
-		return ("[" + this.fecha + "] " + this.nombreUsuario + ": " + this.mensaje);
+	public HashMap<Integer, Sala> getSalas() {
+		return this.salas;
 	}
+
+	public boolean isDataServer() {
+		return dataServer;
+	}
+	
+	
 
 }

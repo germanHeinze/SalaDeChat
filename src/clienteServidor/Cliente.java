@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 import graficos.JChatCliente;
 
@@ -17,8 +18,9 @@ public class Cliente {
 	private DataOutputStream salida;
 	private int sala;
 	private String nombreUsuario;
+	private HashMap<Integer, Sala> salas = new HashMap<Integer, Sala>();
 	
-	public Cliente(int puerto, String ip, int sala, String nombreUsuario) throws UnknownHostException, IOException {
+	public Cliente(int puerto, String ip, int sala, String nombreUsuario) throws UnknownHostException, IOException, ClassNotFoundException {
 		this.ip = ip;
 		this.puerto = puerto;
 		this.socket = new Socket(this.ip, this.puerto);
@@ -26,13 +28,28 @@ public class Cliente {
 		this.salida = new DataOutputStream(socket.getOutputStream());
 		this.sala = sala;
 		this.nombreUsuario = nombreUsuario;
+
 	}
 	
-	public void enviarMensaje(String mensaje) {
+	public void enviarMensaje(String mensaje, int sala, int cantSalas, boolean crearSala, boolean dataServer) throws ClassNotFoundException {
 		try {
 			
-			PaqueteDatos datos = new PaqueteDatos(this.sala, this.nombreUsuario, mensaje, 0);
+			// Le mando al server un paquete de datos con el mensaje, usuario e instrucciones
+			PaqueteDatos datos = new PaqueteDatos(this.sala, this.nombreUsuario, mensaje, cantSalas, crearSala, dataServer);
 			salida.write(datos.serialize(datos));
+			
+			if (datos.isDataServer()) {
+				byte[] buffer = new byte[250000];
+				
+				// recibo datos del servidor
+				PaqueteDatos datosServer = new PaqueteDatos();
+				entrada.read(buffer);
+				datosServer = datosServer.deserialize(buffer);
+				
+				this.salas = datosServer.getSalas();
+				
+			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,21 +66,23 @@ public class Cliente {
 		this.socket.close();
 	}
 	
-	public static void main(String[] args) throws UnknownHostException, IOException {
-		Cliente cliente = new Cliente(50000, "localhost", 0, "ger1234");
-		JChatCliente frame = new JChatCliente();
-		frame.setVisible(true);
-		frame.setTitle("ger1234");
-		frame.asignarCliente(cliente);
-		cliente.inicializarHiloCliente(frame);
-		
-		
-		Cliente cliente2 = new Cliente(50000, "localhost", 0, "Veiny24");
-		JChatCliente frame2 = new JChatCliente();
-		frame2.setVisible(true);
-		frame2.setTitle("Veiny24");
-		frame2.asignarCliente(cliente2);
-		cliente2.inicializarHiloCliente(frame2);
-		
+	
+	public HashMap<Integer, Sala> getSalas() {
+		return salas;
 	}
+	
+	public void setSalas(HashMap<Integer, Sala> salas) {
+		this.salas = salas;
+	}
+	
+	public Socket getSocket() {
+		return socket;
+	}
+	
+//	public static void main(String[] args) throws UnknownHostException, IOException {
+//		
+//		
+//		
+//		
+//	}
 }

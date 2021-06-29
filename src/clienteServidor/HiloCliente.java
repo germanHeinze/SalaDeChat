@@ -25,8 +25,9 @@ public class HiloCliente extends Thread {
 				entrada.read(buffer);
 				datos = datos.deserialize(buffer);
 				
-				// Escribe el frame
-				ventana.escribirMensaje(datos.getMensaje());
+				// Escribe el frame si NO es dataServer
+				if (!datos.isDataServer())
+					ventana.escribirMensaje(datos.getMensaje());
 				
 				System.out.println(datos);
 				

@@ -1,13 +1,18 @@
 package clienteServidor;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Sala {
+public class Sala implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static int Id = 0;
 	private int idSala;
 //	private List<Socket> sockets;

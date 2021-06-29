@@ -104,9 +104,14 @@ public class JChatCliente extends JFrame {
 		contentPane.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Adquiere el mensaje y lo manda al servidor formateado
+				// Adquiere el mensaje y lo manda al servidor
 				String msj = textField.getText();
-				cliente.enviarMensaje(msj);
+				try {
+					cliente.enviarMensaje(msj, sala.getIdSala(), 1, false, false);
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 				// borra y adquire foco
 				textField.setText(null);
@@ -146,8 +151,10 @@ public class JChatCliente extends JFrame {
 //		list.setModel(modelo);
 //	}
 
-	public void asignarCliente(Cliente cliente) throws UnknownHostException, IOException {
+	public void asignarCliente(Cliente cliente, String nombreUsuario) throws UnknownHostException, IOException {
 		this.cliente = cliente;
+		this.nombreUsuario = nombreUsuario;
+		this.setTitle(nombreUsuario);
 	}
 	
 }

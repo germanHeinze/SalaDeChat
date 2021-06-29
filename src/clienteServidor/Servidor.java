@@ -34,12 +34,14 @@ public class Servidor {
 	public void ejecutarChat() throws IOException, ClassNotFoundException {
 		Socket socket;
 		DataInputStream entrada;
+		DataOutputStream salida;
 		PaqueteDatos datos = new PaqueteDatos();
 		byte[] buffer = new byte[250000];
 
 		while (true) {
 			System.out.println("Esperando conexion..");
 			socket = server.accept();
+			
 
 			// El cliente me dice en que sala esta y su usuario
 			entrada = new DataInputStream(socket.getInputStream());
@@ -50,7 +52,14 @@ public class Servidor {
 			System.out.println("Conexion establecida!!!" + datos.getNombreUsuario() + " se unio a sala: "
 					+ datos.getSala());
 
-			if (this.salas.containsKey(datos.getSala()))
+			// Le envio datos al cliente de las salas disponibles
+			salida = new DataOutputStream(socket.getOutputStream());
+			datos.setSalas(this.salas);
+			System.out.println(datos);
+			salida.write(datos.serialize(datos));
+			
+			// Agrego a la sala
+			if (this.salas.containsKey(datos.getSala()) && datos.getSala() != -1)
 				this.salas.get(datos.getSala()).addUsuario(datos.getNombreUsuario(), socket);
 
 			// Diferentes hilos por sala
@@ -59,8 +68,16 @@ public class Servidor {
 //			}
 			
 			this.sockets.add(socket);
-			new HiloServidor(socket, this.sockets).start();
+			new HiloServidor(socket, this.sockets, this).start();
 		}
+	}
+	
+	public HashMap<Integer, Sala> getSalas() {
+		return salas;
+	}
+	
+	public void setSalas(HashMap<Integer, Sala> salas) {
+		this.salas = salas;
 	}
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
