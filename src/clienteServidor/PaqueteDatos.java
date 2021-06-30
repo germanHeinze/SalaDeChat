@@ -18,20 +18,18 @@ public class PaqueteDatos implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int sala;
 	private String nombreUsuario;
 	private String mensaje;
-	private int cantSalas;
+	private int idSala;
 	private String fecha;
 	private boolean crearSala;
 	private String nombreSala;
 	private HashMap<Integer, Sala> salas = new HashMap<Integer, Sala>();
 	private boolean dataServer;
 
-	public PaqueteDatos(int sala, String nombreUsuario, String mensaje, int cantSalas, boolean crearSala, boolean dataServer) {
-		this.sala = sala;
+	public PaqueteDatos(String nombreUsuario, String mensaje, int idSala, boolean crearSala, boolean dataServer) {
 		this.nombreUsuario = nombreUsuario;
-		this.cantSalas = cantSalas;
+		this.idSala = idSala;
 		this.mensaje = mensaje;
 		this.crearSala = crearSala;
 		this.dataServer = dataServer;
@@ -62,8 +60,8 @@ public class PaqueteDatos implements Serializable {
 	}
 	
 	// Setters
-	public void setSala(int sala) {
-		this.sala = sala;
+	public void setIdSala(int sala) {
+		this.idSala = sala;
 	}
 
 	public void setNombreUsuario(String nombreUsuario) {
@@ -75,7 +73,7 @@ public class PaqueteDatos implements Serializable {
 	}
 
 	public void setCantSalas(int cantSalas) {
-		this.cantSalas = cantSalas;
+		this.idSala = cantSalas;
 	}
 	
 	public void setSalas(HashMap<Integer, Sala> salas) {
@@ -87,8 +85,8 @@ public class PaqueteDatos implements Serializable {
 	}
 
 	// Getters
-	public int getSala() {
-		return sala;
+	public int getidSala() {
+		return idSala;
 	}
 
 	public String getNombreUsuario() {
@@ -100,7 +98,7 @@ public class PaqueteDatos implements Serializable {
 	}
 
 	public int getCantSalas() {
-		return cantSalas;
+		return idSala;
 	}
 	
 	public String getFecha() {

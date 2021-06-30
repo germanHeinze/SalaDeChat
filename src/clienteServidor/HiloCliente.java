@@ -9,10 +9,12 @@ public class HiloCliente extends Thread {
 
 	private DataInputStream entrada;
 	private JChatCliente ventana;
+	private Cliente cliente;
 
-	public HiloCliente(DataInputStream entrada, JChatCliente ventana) {
+	public HiloCliente(DataInputStream entrada, JChatCliente ventana, Cliente cliente) {
 		this.ventana = ventana;
 		this.entrada = entrada;
+		this.cliente  = cliente;
 	}
 
 	public void run() {
@@ -24,13 +26,19 @@ public class HiloCliente extends Thread {
 				// Datos de entrada
 				entrada.read(buffer);
 				datos = datos.deserialize(buffer);
-				
+
 				// Escribe el frame si NO es dataServer
 				if (!datos.isDataServer())
-					ventana.escribirMensaje(datos.getMensaje());
+					ventana.escribirMensaje(datos);
+
+				// Recibo datos del servidor y NO escribe el frame
+				else
+					cliente.setSalas(datos.getSalas());
 				
+
 				System.out.println(datos);
 				
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 //				e.printStackTrace();

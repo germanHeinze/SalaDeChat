@@ -3,6 +3,7 @@ package clienteServidor;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -50,17 +51,14 @@ public class Servidor {
 			datos = datos.deserialize(buffer);
 
 			System.out.println("Conexion establecida!!!" + datos.getNombreUsuario() + " se unio a sala: "
-					+ datos.getSala());
+					+ datos.getidSala());
 
 			// Le envio datos al cliente de las salas disponibles
 			salida = new DataOutputStream(socket.getOutputStream());
 			datos.setSalas(this.salas);
-			System.out.println(datos);
+			System.out.println("Salas disponibles: " + this.salas);
 			salida.write(datos.serialize(datos));
 			
-			// Agrego a la sala
-			if (this.salas.containsKey(datos.getSala()) && datos.getSala() != -1)
-				this.salas.get(datos.getSala()).addUsuario(datos.getNombreUsuario(), socket);
 
 			// Diferentes hilos por sala
 //			for (int i = 0; i < this.salas.size(); i++) {

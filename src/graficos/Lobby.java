@@ -127,8 +127,11 @@ public class Lobby {
 
 					try {
 						JChatCliente frame = new JChatCliente();
-						cliente.enviarMensaje("", select, 0, false, true);
+						cliente.enviarMensaje("", select, false, true);
 						cliente.inicializarHiloCliente(frame);
+						System.out.println(cliente.getNombreUsuario() + " se unio a la sala: " + select);
+						
+						// Abre el frame y le asigna el cliente
 						frame.asignarCliente(cliente, nombreUsuario);
 						frame.assignarSala(sala);
 						frame.setVisible(true);
@@ -169,8 +172,8 @@ public class Lobby {
 				nombreUsuario = textField.getText();
 
 				try {
-					cliente = new Cliente(50000, "localhost", 0, nombreUsuario);
-					cliente.enviarMensaje("", -1, 0, false, true); // mensaje vacio al server
+					cliente = new Cliente(50000, "localhost", nombreUsuario);
+					cliente.enviarMensaje("", -1, false, true); // mensaje vacio al server
 					salas = cliente.getSalas();
 					nombreSalas = new LinkedList<Sala>(salas.values());
 

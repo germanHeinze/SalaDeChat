@@ -107,7 +107,7 @@ public class JChatCliente extends JFrame {
 				// Adquiere el mensaje y lo manda al servidor
 				String msj = textField.getText();
 				try {
-					cliente.enviarMensaje(msj, sala.getIdSala(), 1, false, false);
+					cliente.enviarMensaje(msj, sala.getIdSala(), false, false);
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -128,10 +128,10 @@ public class JChatCliente extends JFrame {
 
 	}
 
-	public void escribirMensaje(String msj) {
+	public void escribirMensaje(PaqueteDatos datos) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		String fecha = dtf.format(LocalDateTime.now());
-		String mensaje = ("[" + fecha + "] " + this.nombreUsuario + ": " + msj);
+		String mensaje = ("[" + fecha + "] " + datos.getNombreUsuario() + ": " + datos.getMensaje());
 		textArea_1.append(mensaje + "\n");
 	}
 	

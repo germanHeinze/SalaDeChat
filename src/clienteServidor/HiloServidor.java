@@ -3,6 +3,7 @@ package clienteServidor;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +42,12 @@ public class HiloServidor extends Thread {
 				// Si es dataServer actualizo el servidor
 				if (datos.isDataServer()) {
 					// Le envio datos al cliente de las salas disponibles
-					servidor.setSalas(datos.getSalas());
+//					datos.setSalas(servidor.getSalas()); --> esto genera una NotSerializableException:
 					System.out.println(datos);
+					
+					// Agrego a la sala / actualizo el server
+					if (servidor.getSalas().containsKey(datos.getidSala()) && datos.getidSala() != -1)
+						servidor.getSalas().get(datos.getidSala()).addUsuario(datos.getNombreUsuario(), socket);
 				}
 				
 				// Se hace siempre, aunque sea dataServer
