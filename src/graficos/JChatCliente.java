@@ -14,9 +14,12 @@ import clienteServidor.Sala;
 import javax.swing.JTextArea;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
@@ -40,6 +43,8 @@ public class JChatCliente extends JFrame {
 	private Sala sala;
 	private JList list;
 	private int puerto = 50000;
+	private JButton btnNewButtonDescargar;
+
 
 	/**
 	 * Launch the application.
@@ -56,7 +61,7 @@ public class JChatCliente extends JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent evt){
-                if (JOptionPane.showConfirmDialog(rootPane, "¿Desea salir de la sala?", 
+                if (JOptionPane.showConfirmDialog(rootPane, "Â¿Desea salir de la sala?", 
                         "Chat", JOptionPane.ERROR_MESSAGE) == JOptionPane.ERROR_MESSAGE){
                 	try {
 						cliente.close();
@@ -95,12 +100,12 @@ public class JChatCliente extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		textField = new JTextField();
-		textField.setBounds(203, 377, 355, 31);
+		textField.setBounds(203, 377, 280, 31);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Enviar");
-		btnNewButton.setBounds(587, 377, 98, 32);
+		btnNewButton.setBounds(487, 377, 98, 32);
 		contentPane.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -116,9 +121,57 @@ public class JChatCliente extends JFrame {
 				// borra y adquire foco
 				textField.setText(null);
 				textField.requestFocus();
+				btnNewButtonDescargar.setEnabled(true);
 				
 //				ventana.actualizarList();
 				
+			}
+		});
+		
+		btnNewButtonDescargar = new JButton("Descargar");
+		btnNewButtonDescargar.setBounds(587, 377, 98, 32);
+		contentPane.add(btnNewButtonDescargar);
+		btnNewButtonDescargar.setEnabled(false);
+		btnNewButtonDescargar.setToolTipText("Exportar el Chat");
+
+		btnNewButtonDescargar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser jFileChooser = new JFileChooser();
+				String userHome = System.getProperty("user.home");
+				userHome = userHome + "/Downloads";
+
+				jFileChooser.setCurrentDirectory(new java.io.File(userHome));
+
+				jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+				jFileChooser.showOpenDialog(btnNewButtonDescargar);
+
+				if (jFileChooser.getSelectedFile() != null) {
+					FileWriter guardado;
+
+					{
+						FileWriter fichero = null;
+						PrintWriter pw = null;
+						try {
+							fichero = new FileWriter(jFileChooser.getSelectedFile().toString() + "/chat.txt");
+							pw = new PrintWriter(fichero);
+
+							pw.println(textArea_1.getText());
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								if (null != fichero)
+									fichero.close();
+							} catch (Exception e2) {
+								e2.printStackTrace();
+							}
+						}
+					}
+
+				}
+
 			}
 		});
 
